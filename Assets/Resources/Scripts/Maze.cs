@@ -14,15 +14,6 @@ public class Maze : MonoBehaviour {
 		tile = new bool[MAZE_SIZE, MAZE_SIZE];
 		carveMaze ();
 
-		for (int i = 0; i < MAZE_SIZE; i++) {
-			String line = "|";
-			for (int j = 0; j < MAZE_SIZE; j++) {
-				line += (tile [i, j] ? "x" : " ");
-			}
-			line += "|";
-			print (line);
-		}
-
 		Tile[,] tiles = new Tile[MAZE_SIZE, MAZE_SIZE];
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
@@ -56,8 +47,14 @@ public class Maze : MonoBehaviour {
 				}
 			}
 			else {
-				if (rand.Next(10) < 1) {
-					//explode
+				if (rand.Next(10) < 4) {
+					for(int i = carver.x - 2; i <= carver.x + 2; i++) {
+						for(int j = carver.y - 2; j <= carver.y + 2; j++) {
+							if(i >= 0 && i < MAZE_SIZE && j >= 0 && j < MAZE_SIZE) {
+								tile[i,j] = true;
+							}
+						}
+					}
 				}
 				carverCount--;
 				activeIndex++;
@@ -71,22 +68,36 @@ public class Maze : MonoBehaviour {
 
 	List<Coordinate> getUncarvedNeighbors (int x, int y, int dir) {
 
+		print ("uncarved: "+x + ", " + y + ", "+dir);
+		bool prevDirValid = false;
 		List<Coordinate> neighbors = new List<Coordinate> ();
 		if (x - 1 >= 0 && !tile [x - 1, y]) {
 			neighbors.Add(new Coordinate(x - 1, y, 0));
+			if(dir == 0) {
+				prevDirValid = true;
+			}
 		}
 		if (x + 1 < MAZE_SIZE && !tile [x + 1, y]) {
 			neighbors.Add(new Coordinate(x + 1, y, 1));
+			if(dir == 1) {
+				prevDirValid = true;
+			}
 		}
 		if (y - 1 >= 0 && !tile [x, y - 1]) {
 			neighbors.Add(new Coordinate(x, y - 1, 2));
+			if(dir == 2) {
+				prevDirValid = true;
+			}
 		}
 		if (y + 1 < MAZE_SIZE && !tile [x, y + 1]) {
 			neighbors.Add(new Coordinate(x, y + 1, 3));
+			if(dir == 3) {
+				prevDirValid = true;
+			}
 		}
 
 		int size = neighbors.Count;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size && prevDirValid; i++) {
 			switch(dir) {
 			case 0:
 				neighbors.Add(new Coordinate(x - 1, y, 0));
@@ -139,8 +150,12 @@ public class Maze : MonoBehaviour {
 				}
 				print (neighbors.Count);
 				Coordinate coord = neighbors [rand.Next (neighbors.Count)];
+				print ("getcoord: "+coord.x + ", " + coord.y + ", "+coord.dir);
 				// mark tile as taken
 				mazeRef.carveTile (x, y);
+				if(coord.x < 0 || coord.y < 0) {
+					print ("after: "+coord.x + ", " + coord.y + ", "+coord.dir);
+				}
 				x = coord.x;
 				y = coord.y;
 
