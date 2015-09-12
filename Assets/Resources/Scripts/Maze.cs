@@ -123,7 +123,7 @@ public class Maze : MonoBehaviour {
 		public MazeCarver(int x, int y, Maze mazeRef) {
 			this.x = x;
 			this.y = y;
-			this.steps = rand.Next(20, 30);
+			this.steps = rand.Next(20, 50);
 			this.mazeRef = mazeRef;
 			this.prevDir = rand.Next(3);
 		}

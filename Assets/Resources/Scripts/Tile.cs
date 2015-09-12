@@ -14,6 +14,7 @@ public class Tile {
 
 		BoxCollider2D bc = go.GetComponent<BoxCollider2D> ();
 		bc.size = new Vector2 (1, 1);
+		bc.offset = new Vector2 (.5f, .5f);
 
 		Rigidbody2D rb = go.GetComponent<Rigidbody2D> ();
 		rb.isKinematic = true;
