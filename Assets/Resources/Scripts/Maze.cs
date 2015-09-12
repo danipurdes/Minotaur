@@ -30,7 +30,7 @@ public class Maze : MonoBehaviour {
 	void carveMaze () {
 		int startX = MAZE_SIZE / 2;
 		int startY = startX;
-		MazeCarver[] carvers = new MazeCarver[30];
+		MazeCarver[] carvers = new MazeCarver[60];
 		carvers [0] = new MazeCarver (startX, startY, this);
 		int nextIndex = 1;
 		int activeIndex = 0;
@@ -68,28 +68,27 @@ public class Maze : MonoBehaviour {
 
 	List<Coordinate> getUncarvedNeighbors (int x, int y, int dir) {
 
-		print ("uncarved: "+x + ", " + y + ", "+dir);
 		bool prevDirValid = false;
 		List<Coordinate> neighbors = new List<Coordinate> ();
-		if (x - 1 >= 0 && !tile [x - 1, y]) {
+		if (x - 1 >= 1 && !tile [x - 1, y]) {
 			neighbors.Add(new Coordinate(x - 1, y, 0));
 			if(dir == 0) {
 				prevDirValid = true;
 			}
 		}
-		if (x + 1 < MAZE_SIZE && !tile [x + 1, y]) {
+		if (x + 1 < MAZE_SIZE - 1 && !tile [x + 1, y]) {
 			neighbors.Add(new Coordinate(x + 1, y, 1));
 			if(dir == 1) {
 				prevDirValid = true;
 			}
 		}
-		if (y - 1 >= 0 && !tile [x, y - 1]) {
+		if (y - 1 >= 1 && !tile [x, y - 1]) {
 			neighbors.Add(new Coordinate(x, y - 1, 2));
 			if(dir == 2) {
 				prevDirValid = true;
 			}
 		}
-		if (y + 1 < MAZE_SIZE && !tile [x, y + 1]) {
+		if (y + 1 < MAZE_SIZE - 1 && !tile [x, y + 1]) {
 			neighbors.Add(new Coordinate(x, y + 1, 3));
 			if(dir == 3) {
 				prevDirValid = true;
@@ -134,7 +133,7 @@ public class Maze : MonoBehaviour {
 		public MazeCarver(int x, int y, Maze mazeRef) {
 			this.x = x;
 			this.y = y;
-			this.steps = rand.Next(20, 50);
+			this.steps = rand.Next(40, 60);
 			this.mazeRef = mazeRef;
 			this.prevDir = rand.Next(3);
 		}
