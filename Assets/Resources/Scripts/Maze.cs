@@ -7,23 +7,33 @@ public class Maze : MonoBehaviour {
 
 	readonly int MAZE_SIZE = 100;
 
-	bool[,] tile;
+	bool[,] isCarved;
+	Tile[,] tiles;
 	Vector2 origin = new Vector2(0,0);
 
 	void Start () {
-		tile = new bool[MAZE_SIZE, MAZE_SIZE];
+		isCarved = new bool[MAZE_SIZE, MAZE_SIZE];
 		carveMaze ();
 
-		Tile[,] tiles = new Tile[MAZE_SIZE, MAZE_SIZE];
+		tiles = new Tile[MAZE_SIZE, MAZE_SIZE];
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
-				if (tile[i,j])
+				if (isCarved[i,j])
 					tiles[i,j] = new Floor();
 				else
 					tiles[i,j] = new Wall();
 
 				tiles [i,j].go.transform.position = new Vector2(origin.y + j, origin.x + i);
 				tiles [i,j].go.transform.parent = this.transform;
+			}
+		}
+	}
+
+	void Update () {
+		for (int i = 0; i < MAZE_SIZE; i++) {
+			for (int j = 0; j < MAZE_SIZE; j++) {
+				SpriteRenderer sr = tiles[i,j].go.GetComponent<SpriteRenderer>();
+				sr.color = new Color(0, 0, 0);
 			}
 		}
 	}
@@ -52,7 +62,7 @@ public class Maze : MonoBehaviour {
 					for(int i = carver.x - 2; i <= carver.x + 2; i++) {
 						for(int j = carver.y - 2; j <= carver.y + 2; j++) {
 							if(i >= 0 && i < MAZE_SIZE && j >= 0 && j < MAZE_SIZE) {
-								tile[i,j] = true;
+								isCarved[i,j] = true;
 							}
 						}
 					}
@@ -83,33 +93,33 @@ public class Maze : MonoBehaviour {
 		print("start: (" + startpt.x + ", " + startpt.y + ", " + startDir + ")");
 	}
 
-	void carveTile (int x, int y) {
-		tile [x, y] = true;
+	void carveisCarved (int x, int y) {
+		isCarved [x, y] = true;
 	}
 
 	List<Coordinate> getUncarvedNeighbors (int x, int y, int dir) {
 
 		bool prevDirValid = false;
 		List<Coordinate> neighbors = new List<Coordinate> ();
-		if (x - 1 >= 1 && !tile [x - 1, y]) {
+		if (x - 1 >= 1 && !isCarved [x - 1, y]) {
 			neighbors.Add(new Coordinate(x - 1, y, 0));
 			if(dir == 0) {
 				prevDirValid = true;
 			}
 		}
-		if (x + 1 < MAZE_SIZE - 1 && !tile [x + 1, y]) {
+		if (x + 1 < MAZE_SIZE - 1 && !isCarved [x + 1, y]) {
 			neighbors.Add(new Coordinate(x + 1, y, 1));
 			if(dir == 1) {
 				prevDirValid = true;
 			}
 		}
-		if (y - 1 >= 1 && !tile [x, y - 1]) {
+		if (y - 1 >= 1 && !isCarved [x, y - 1]) {
 			neighbors.Add(new Coordinate(x, y - 1, 2));
 			if(dir == 2) {
 				prevDirValid = true;
 			}
 		}
-		if (y + 1 < MAZE_SIZE - 1 && !tile [x, y + 1]) {
+		if (y + 1 < MAZE_SIZE - 1 && !isCarved [x, y + 1]) {
 			neighbors.Add(new Coordinate(x, y + 1, 3));
 			if(dir == 3) {
 				prevDirValid = true;
@@ -136,11 +146,6 @@ public class Maze : MonoBehaviour {
 		}
 
 		return neighbors;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
 	private class MazeCarver {
@@ -171,8 +176,8 @@ public class Maze : MonoBehaviour {
 				print (neighbors.Count);
 				Coordinate coord = neighbors [rand.Next (neighbors.Count)];
 				print ("getcoord: "+coord.x + ", " + coord.y + ", "+coord.dir);
-				// mark tile as taken
-				mazeRef.carveTile (x, y);
+				// mark isCarved as taken
+				mazeRef.carveisCarved (x, y);
 				if(coord.x < 0 || coord.y < 0) {
 					print ("after: "+coord.x + ", " + coord.y + ", "+coord.dir);
 				}
