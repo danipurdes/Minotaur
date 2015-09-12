@@ -19,7 +19,7 @@ public class Maze : MonoBehaviour {
 			for (int j = 0; j < MAZE_SIZE; j++) {
 				if (!tile[i,j]) {
 					tiles [i,j] = new Tile ();
-					GameObject.Instantiate(tiles[i,j].go);
+					//GameObject.Instantiate(tiles[i,j].go);
 					tiles [i,j].go.transform.position = new Vector2(origin.y + j, origin.x + i);
 					tiles [i,j].go.transform.parent = this.transform;
 				}
@@ -60,6 +60,26 @@ public class Maze : MonoBehaviour {
 				activeIndex++;
 			}
 		}
+
+		int startDir = -1;
+
+		switch (carvers[activeIndex-1].prevDir) {
+		case 0:  
+			startDir = 1; 
+			break;
+		case 1:  
+			startDir = 0; 
+			break;
+		case 2:  
+			startDir = 3; 
+			break;
+		case 3:  
+			startDir = 2;
+			break;
+		}
+
+		Coordinate startpt = new Coordinate(carvers[activeIndex-1].x, carvers[activeIndex-1].y, startDir);
+		print("start: (" + startpt.x + ", " + startpt.y + ", " + startDir + ")");
 	}
 
 	void carveTile (int x, int y) {
