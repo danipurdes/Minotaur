@@ -17,12 +17,13 @@ public class Maze : MonoBehaviour {
 		Tile[,] tiles = new Tile[MAZE_SIZE, MAZE_SIZE];
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
-				if (!tile[i,j]) {
-					tiles [i,j] = new Tile ();
-					//GameObject.Instantiate(tiles[i,j].go);
-					tiles [i,j].go.transform.position = new Vector2(origin.y + j, origin.x + i);
-					tiles [i,j].go.transform.parent = this.transform;
-				}
+				if (tile[i,j])
+					tiles[i,j] = new Floor();
+				else
+					tiles[i,j] = new Wall();
+
+				tiles [i,j].go.transform.position = new Vector2(origin.y + j, origin.x + i);
+				tiles [i,j].go.transform.parent = this.transform;
 			}
 		}
 	}

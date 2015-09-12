@@ -61,7 +61,6 @@ public class Player : MonoBehaviour {
 
 		if (moving) {
 			currentFrame += Time.deltaTime * 16;
-
 			sr.sprite = playerSprite [walkCycle [Mathf.RoundToInt(currentFrame) % walkCycle.Length]];
 		} else {
 			sr.sprite = playerSprite[walkCycle[idleFrame]];
