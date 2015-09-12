@@ -16,6 +16,10 @@ public class Player : MonoBehaviour {
 
 		Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D> ();
 		rb.gravityScale = 0;
+
+		SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer> ();
+		Sprite[] s = Resources.LoadAll<Sprite> ("Sprites/playerAnimated");
+		sr.sprite = s [0];
 	}
 	
 	// Update is called once per frame
