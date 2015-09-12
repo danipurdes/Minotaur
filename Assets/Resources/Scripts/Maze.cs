@@ -13,7 +13,7 @@ public class Maze : MonoBehaviour {
 	
 	void Start () {
 		isCarved = new bool[MAZE_SIZE, MAZE_SIZE];
-		carveMaze ();
+		Coordinate exitDoor = carveMaze ();
 
 		tiles = new Tile[MAZE_SIZE, MAZE_SIZE];
 		for (int i = 0; i < MAZE_SIZE; i++) {
@@ -27,13 +27,41 @@ public class Maze : MonoBehaviour {
 				tiles [i,j].go.transform.parent = this.transform;
 			}
 		}
+
+		GameObject.Destroy (tiles [exitDoor.x, exitDoor.y].go);
+		tiles [exitDoor.x, exitDoor.y] = new Door(exitDoor.dir);
+		tiles [exitDoor.x, exitDoor.y].go.transform.position = new Vector2(origin.y + exitDoor.y, origin.x + exitDoor.x);
+		tiles [exitDoor.x, exitDoor.y].go.transform.parent = this.transform;
+
+		for (int i = 0; i < MAZE_SIZE; i++) {
+			GameObject.Destroy (tiles [0, i].go);
+			tiles[0,i] = new Wall();
+			tiles [0,i].go.transform.position = new Vector2(origin.y + i, origin.x);
+			tiles [0,i].go.transform.parent = this.transform;
+			GameObject.Destroy (tiles [MAZE_SIZE-1,i].go);
+			tiles[MAZE_SIZE-1,i] = new Wall();
+			tiles [MAZE_SIZE-1,i].go.transform.position = new Vector2(origin.y + i, origin.x + MAZE_SIZE-1);
+			tiles [MAZE_SIZE-1,i].go.transform.parent = this.transform;
+		}
+
+		for (int i = 0; i < MAZE_SIZE; i++) {
+			GameObject.Destroy (tiles [i,0].go);
+			tiles[i,0] = new Wall();
+			tiles [i,0].go.transform.position = new Vector2(origin.y + 0, origin.x + i);
+			tiles [i,0].go.transform.parent = this.transform;
+			GameObject.Destroy (tiles [i, MAZE_SIZE-1].go);
+			tiles[i, MAZE_SIZE-1] = new Wall();
+			tiles [i, MAZE_SIZE-1].go.transform.position = new Vector2(origin.y + MAZE_SIZE - 1, origin.x);
+			tiles [i, MAZE_SIZE-1].go.transform.parent = this.transform;
+		}
 	}
+	
 
 	void Update () {
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
 				SpriteRenderer sr = tiles[i,j].go.GetComponent<SpriteRenderer>();
-				sr.color = new Color(0, 0, 0);
+				//sr.color = new Color(0, 0, 0);
 			}
 		}
 
@@ -42,7 +70,6 @@ public class Maze : MonoBehaviour {
 		for (int i = Math.Max(Mathf.RoundToInt(playerPos.x) - rad, 0); i < Math.Min(Mathf.RoundToInt(playerPos.x) + rad, MAZE_SIZE); i++) {
 			for (int j = Math.Max(Mathf.RoundToInt(playerPos.y) - rad, 0); j < Math.Min(Mathf.RoundToInt(playerPos.y) + rad, MAZE_SIZE); j++) {
 				float dis = Vector2.Distance(playerPos, new Vector2(i + .5f,j + .5f));
-				print ("px: "+playerPos.x + " py:" + playerPos.y + " i: " + i + "j: "+ j);
 				if(dis <= rad) {
 					float colorval = (rad - dis)/(float)rad;
 					SpriteRenderer sr = tiles[j,i].go.GetComponent<SpriteRenderer>();
@@ -52,7 +79,7 @@ public class Maze : MonoBehaviour {
 		}
 	}
 
-	void carveMaze () {
+	Coordinate carveMaze () {
 		int startX = MAZE_SIZE / 2;
 		int startY = startX;
 		MazeCarver[] carvers = new MazeCarver[60];
@@ -86,25 +113,28 @@ public class Maze : MonoBehaviour {
 			}
 		}
 
-		int startDir = -1;
+		return new Coordinate(carvers[activeIndex-1].x, carvers[activeIndex-1].y, carvers[activeIndex-1].prevDir);
 
-		switch (carvers[activeIndex-1].prevDir) {
-		case 0:  
-			startDir = 1; 
-			break;
-		case 1:  
-			startDir = 0; 
-			break;
-		case 2:  
-			startDir = 3; 
-			break;
-		case 3:  
-			startDir = 2;
-			break;
-		}
 
-		Coordinate startpt = new Coordinate(carvers[activeIndex-1].x, carvers[activeIndex-1].y, startDir);
-		print("start: (" + startpt.x + ", " + startpt.y + ", " + startDir + ")");
+
+//		int startDir = -1;
+//
+//		switch (carvers[activeIndex-1].prevDir) {
+//		case 0:  
+//			startDir = 1; 
+//			break;
+//		case 1:  
+//			startDir = 0; 
+//			break;
+//		case 2:  
+//			startDir = 3; 
+//			break;
+//		case 3:  
+//			startDir = 2;
+//			break;
+//		}
+//
+//		Coordinate startpt = new Coordinate(carvers[activeIndex-1].x, carvers[activeIndex-1].y, startDir);
 	}
 
 	void carveisCarved (int x, int y) {
@@ -187,14 +217,9 @@ public class Maze : MonoBehaviour {
 				if (neighbors.Count == 0) {
 					return false;
 				}
-				print (neighbors.Count);
 				Coordinate coord = neighbors [rand.Next (neighbors.Count)];
-				print ("getcoord: "+coord.x + ", " + coord.y + ", "+coord.dir);
 				// mark isCarved as taken
 				mazeRef.carveisCarved (x, y);
-				if(coord.x < 0 || coord.y < 0) {
-					print ("after: "+coord.x + ", " + coord.y + ", "+coord.dir);
-				}
 				x = coord.x;
 				y = coord.y;
 

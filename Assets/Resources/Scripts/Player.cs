@@ -57,7 +57,7 @@ public class Player : MonoBehaviour {
 
 		if (isRotatingLeft) {
 			transform.Rotate (0, 0, 120 * Time.deltaTime);
-			if (transform.eulerAngles.z % 90 < 1 || transform.eulerAngles.z % 90 > 89) {
+			if (transform.eulerAngles.z % 90 < 3 || transform.eulerAngles.z % 90 > 87) {
 				print(Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z+", "+transform.eulerAngles.z);
 				transform.Rotate (0, 0, Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z);
 				isRotatingLeft = false;
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour {
 
 		if (isRotatingRight) {
 			transform.Rotate (0, 0, -120 * Time.deltaTime);
-			if (transform.eulerAngles.z % 90 < 1 || transform.eulerAngles.z % 90 > 89) {
+			if (transform.eulerAngles.z % 90 < 3 || transform.eulerAngles.z % 90 > 87) {
 				transform.Rotate (0, 0, Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z);
 				isRotatingRight = false;
 			}

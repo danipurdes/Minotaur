@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Resources\Scripts\CameraControl.cs" />
+     <Compile Include="Assets\Resources\Scripts\Door.cs" />
      <Compile Include="Assets\Resources\Scripts\Floor.cs" />
      <Compile Include="Assets\Resources\Scripts\Maze.cs" />
      <Compile Include="Assets\Resources\Scripts\Player.cs" />
