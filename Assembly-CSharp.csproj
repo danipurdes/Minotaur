@@ -46,8 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\CameraControl.cs" />
+     <Compile Include="Assets\Player.cs" />
+     <Compile Include="Assets\Resources\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Resources\Scripts\Maze.cs" />
+     <Compile Include="Assets\Resources\Scripts\NewBehaviourScript.cs" />
      <Compile Include="Assets\Resources\Scripts\Tile.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
