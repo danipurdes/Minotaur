@@ -10,7 +10,7 @@ public class Maze : MonoBehaviour {
 	bool[,] isCarved;
 	Tile[,] tiles;
 	Vector2 origin = new Vector2(0,0);
-
+	
 	void Start () {
 		isCarved = new bool[MAZE_SIZE, MAZE_SIZE];
 		carveMaze ();
@@ -34,6 +34,20 @@ public class Maze : MonoBehaviour {
 			for (int j = 0; j < MAZE_SIZE; j++) {
 				SpriteRenderer sr = tiles[i,j].go.GetComponent<SpriteRenderer>();
 				sr.color = new Color(0, 0, 0);
+			}
+		}
+
+		int rad = 5;
+		Vector2 playerPos = transform.GetChild (0).position;
+		for (int i = Math.Max(Mathf.RoundToInt(playerPos.x) - rad, 0); i < Math.Min(Mathf.RoundToInt(playerPos.x) + rad, MAZE_SIZE); i++) {
+			for (int j = Math.Max(Mathf.RoundToInt(playerPos.y) - rad, 0); j < Math.Min(Mathf.RoundToInt(playerPos.y) + rad, MAZE_SIZE); j++) {
+				float dis = Vector2.Distance(playerPos, new Vector2(i + .5f,j + .5f));
+				print ("px: "+playerPos.x + " py:" + playerPos.y + " i: " + i + "j: "+ j);
+				if(dis <= rad) {
+					float colorval = (rad - dis)/(float)rad;
+					SpriteRenderer sr = tiles[j,i].go.GetComponent<SpriteRenderer>();
+					sr.color = new Color(colorval, colorval, colorval);
+				}
 			}
 		}
 	}

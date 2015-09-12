@@ -5,7 +5,7 @@ public class Wall : Tile {
 	
 	// Use this for initialization
 	public Wall () : base(){
-		go = new GameObject ("Tile");
+		go = new GameObject ("Wall");
 		go.AddComponent<BoxCollider2D> ();
 		go.AddComponent<Rigidbody2D> ();
 		go.AddComponent<SpriteRenderer> ();
