@@ -69,42 +69,42 @@ public class Maze : MonoBehaviour {
 		tile [x, y] = true;
 	}
 
-	// 0 = left, 1 = right, 2 = down, 3 = up
-	Coordinate[] getUncarvedNeighbors (int x, int y) {
-		Coordinate[] neighbors = new Coordinate[4];
-		bool validNeighbor = false;
+	List<Coordinate> getUncarvedNeighbors (int x, int y, int dir) {
+
+		List<Coordinate> neighbors = new List<Coordinate> ();
 		if (x - 1 >= 0 && !tile [x - 1, y]) {
-			validNeighbor = true;
-			neighbors [0] = new Coordinate (x - 1, y);
-		} else {
-			neighbors[0] = null;
+			neighbors.Add(new Coordinate(x - 1, y, 0));
 		}
-
 		if (x + 1 < MAZE_SIZE && !tile [x + 1, y]) {
-			validNeighbor = true;
-			neighbors [1] = new Coordinate (x + 1, y);
-		} else {
-			neighbors[1] = null;
+			neighbors.Add(new Coordinate(x + 1, y, 1));
 		}
-
-		if(y - 1 >= 0 && !tile [x, y - 1]) {
-			validNeighbor = true;
-			neighbors[2] = new Coordinate(x, y - 1);
-		} else {
-			neighbors[2] = null;
+		if (y - 1 >= 0 && !tile [x, y - 1]) {
+			neighbors.Add(new Coordinate(x, y - 1, 2));
 		}
-
 		if (y + 1 < MAZE_SIZE && !tile [x, y + 1]) {
-			validNeighbor = true;
-			neighbors[3] = new Coordinate(x, y + 1);
-		} else {
-			neighbors[3] = null;
+			neighbors.Add(new Coordinate(x, y + 1, 3));
 		}
-		if (validNeighbor) {
-			return neighbors;
-		} else {
-			return new Coordinate[0];
+
+		int size = neighbors.Count;
+		for (int i = 0; i < size; i++) {
+			switch(dir) {
+			case 0:
+				neighbors.Add(new Coordinate(x - 1, y, 0));
+				break;
+			case 1:
+				neighbors.Add(new Coordinate(x + 1, y, 1));
+				break;
+			case 2:
+				neighbors.Add(new Coordinate(x, y - 1, 2));
+				break;
+			case 3:
+				neighbors.Add(new Coordinate(x, y + 1, 3));
+				break;
+
+			}
 		}
+
+		return neighbors;
 	}
 	
 	// Update is called once per frame
@@ -118,46 +118,27 @@ public class Maze : MonoBehaviour {
 		public int y;
 		int steps;
 		Maze mazeRef;
-		private int prevDir;
+		public int prevDir;
 
 		public MazeCarver(int x, int y, Maze mazeRef) {
 			this.x = x;
 			this.y = y;
 			this.steps = rand.Next(20, 30);
 			this.mazeRef = mazeRef;
-			this.prevDir = rand.Next(4);
+			this.prevDir = rand.Next(3);
 		}
 
 		/* Pick a direction, move */
 		public bool update() {
 			if (steps-- > 0) {
 				// talk to maze to get a list of neighbors
-				Coordinate[] neighbors = this.mazeRef.getUncarvedNeighbors (this.x, this.y);
+				List<Coordinate> neighbors = this.mazeRef.getUncarvedNeighbors (this.x, this.y, this.prevDir);
 				// select a direction at random
-				if (neighbors.Length == 0) {
+				if (neighbors.Count == 0) {
 					return false;
 				}
-
-				Coordinate coord = null;
-				if(neighbors[prevDir] != null && rand.Next(100) < 60) {
-					coord = neighbors[prevDir];
-				}
-				else {
-					int activeCount = 0;
-					for(int i = 0; i < neighbors.Length; i++) {
-						if(neighbors[i] != null) {
-							activeCount++;
-						}
-					}
-					int neighbor = rand.Next(activeCount);
-					int index = 0;
-					for(; index <= neighbor; index++) {
-						if(neighbors[index] == null) {
-							neighbor++;
-						}
-					}
-					coord = neighbors[index];
-				}
+				print (neighbors.Count);
+				Coordinate coord = neighbors [rand.Next (neighbors.Count)];
 				// mark tile as taken
 				mazeRef.carveTile (x, y);
 				x = coord.x;
@@ -172,10 +153,12 @@ public class Maze : MonoBehaviour {
 	private class Coordinate {
 		public readonly int x;
 		public readonly int y;
+		public readonly int dir; // 0 = left, 1 =right, 2 = down, 3 = up
 
-		public Coordinate(int x, int y) {
+		public Coordinate(int x, int y, int dir) {
 			this.x = x;
 			this.y = y;
+			this.dir = dir;
 		}
 	}
 }
