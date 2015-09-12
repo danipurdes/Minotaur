@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 	int idleFrame;
 	int[] walkCycle;
 	float currentFrame;
+	bool isRotating;
 
 	// Use this for initialization
 	void Start () {
@@ -53,10 +54,14 @@ public class Player : MonoBehaviour {
 			moving = true;
 		}
 		
-		if (Input.GetKey ("j"))
+		if (Input.GetKey ("j")) {
 			transform.Rotate (0, 0, 60 * Time.deltaTime);
-		if (Input.GetKey ("l"))
+			isRotating = true;
+		}
+		if (Input.GetKey ("l")) {
 			transform.Rotate (0, 0, -60 * Time.deltaTime);
+			isRotating = true;
+		}
 
 
 		if (moving) {
