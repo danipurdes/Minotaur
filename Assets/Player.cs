@@ -10,7 +10,8 @@ public class Player : MonoBehaviour {
 	int idleFrame;
 	int[] walkCycle;
 	float currentFrame;
-	bool isRotating;
+	bool isRotatingLeft;
+	bool isRotatingRight;
 
 	// Use this for initialization
 	void Start () {
@@ -53,16 +54,30 @@ public class Player : MonoBehaviour {
 			transform.Translate (0, moveSpeed * Time.deltaTime, 0);
 			moving = true;
 		}
-		
-		if (Input.GetKey ("j")) {
-			transform.Rotate (0, 0, 60 * Time.deltaTime);
-			isRotating = true;
-		}
-		if (Input.GetKey ("l")) {
-			transform.Rotate (0, 0, -60 * Time.deltaTime);
-			isRotating = true;
+
+		if (isRotatingLeft) {
+			transform.Rotate (0, 0, 120 * Time.deltaTime);
+			if (transform.eulerAngles.z % 90 < 1 || transform.eulerAngles.z % 90 > 89) {
+				print(Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z+", "+transform.eulerAngles.z);
+				transform.Rotate (0, 0, Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z);
+				isRotatingLeft = false;
+			}
 		}
 
+		if (isRotatingRight) {
+			transform.Rotate (0, 0, -120 * Time.deltaTime);
+			if (transform.eulerAngles.z % 90 < 1 || transform.eulerAngles.z % 90 > 89) {
+				transform.Rotate (0, 0, Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z);
+				isRotatingRight = false;
+			}
+		}
+
+		if (Input.GetKey ("j")) {
+			isRotatingLeft = !isRotatingRight;
+		}
+		if (Input.GetKey ("l")) {
+			isRotatingRight = !isRotatingLeft;
+		}
 
 		if (moving) {
 			currentFrame += Time.deltaTime * 16;
