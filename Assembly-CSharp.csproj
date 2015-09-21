@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AnyKey.cs" />
      <Compile Include="Assets\Resources\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Resources\Scripts\Door.cs" />
      <Compile Include="Assets\Resources\Scripts\Floor.cs" />

@@ -11,9 +11,10 @@ public class Door : Tile {
 		go.GetComponent<SpriteRenderer>().sprite = s;
 
 		go.AddComponent<BoxCollider2D> ();
+		go.GetComponent<BoxCollider2D> ().isTrigger = true;
 	}
 
-	void onCollisionEnter(Collision collisionInfo) {
-		Debug.Log("You win!");
+	void onTriggerEnter2D(Collider collisionInfo) {
+		Application.LoadLevel ("Title");
 	}
 }

@@ -31,10 +31,18 @@ public class Player : MonoBehaviour {
 		walkCycle = new int[]{0,1,2,3,4,2};
 		currentFrame = idleFrame;
 		sr.sprite = playerSprite [Mathf.RoundToInt(currentFrame)];
+
+		transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		GameObject door = GameObject.Find("Door");
+		if (Mathf.RoundToInt(door.transform.position.x) == Mathf.RoundToInt(gameObject.transform.position.x) && 
+		    Mathf.RoundToInt(gameObject.transform.position.y) == Mathf.RoundToInt(door.transform.position.y)) {
+
+		}
 
 		bool moving = false;
 
@@ -57,8 +65,7 @@ public class Player : MonoBehaviour {
 
 		if (isRotatingLeft) {
 			transform.Rotate (0, 0, 120 * Time.deltaTime);
-			if (transform.eulerAngles.z % 90 < 3 || transform.eulerAngles.z % 90 > 87) {
-				print(Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z+", "+transform.eulerAngles.z);
+			if (transform.eulerAngles.z % 90 < 1 || transform.eulerAngles.z % 90 > 89) {
 				transform.Rotate (0, 0, Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z);
 				isRotatingLeft = false;
 			}
@@ -66,7 +73,7 @@ public class Player : MonoBehaviour {
 
 		if (isRotatingRight) {
 			transform.Rotate (0, 0, -120 * Time.deltaTime);
-			if (transform.eulerAngles.z % 90 < 3 || transform.eulerAngles.z % 90 > 87) {
+			if (transform.eulerAngles.z % 90 < 1 || transform.eulerAngles.z % 90 > 89) {
 				transform.Rotate (0, 0, Mathf.RoundToInt(transform.eulerAngles.z/90)*90 - transform.eulerAngles.z);
 				isRotatingRight = false;
 			}

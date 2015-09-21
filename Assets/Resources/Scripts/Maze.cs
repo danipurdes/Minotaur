@@ -61,7 +61,7 @@ public class Maze : MonoBehaviour {
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
 				SpriteRenderer sr = tiles[i,j].go.GetComponent<SpriteRenderer>();
-				//sr.color = new Color(0, 0, 0);
+				sr.color = new Color(0, 0, 0);
 			}
 		}
 

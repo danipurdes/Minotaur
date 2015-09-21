@@ -19,6 +19,7 @@ public class Wall : Tile {
 		
 		SpriteRenderer sr = go.GetComponent<SpriteRenderer> ();
 		sr.sprite = Resources.Load<Sprite> ("Sprites/wall");
+		go.transform.position = new Vector3 (go.transform.position.x, go.transform.position.y, -2);
 	}
 	
 	// Update is called once per frame
