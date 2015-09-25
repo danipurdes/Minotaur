@@ -46,19 +46,13 @@ public class Player : MonoBehaviour {
 
 		bool moving = false;
 
-		if (Input.GetKey ("a")) {
-			transform.Translate (-moveSpeed * Time.deltaTime, 0, 0);
-			moving = true;
-		}
-		if (Input.GetKey ("d")) {
-			transform.Translate (moveSpeed * Time.deltaTime, 0, 0);
-			moving = true;
-		}
-		if (Input.GetKey ("s")) {
+		bool isRotating = isRotatingLeft || isRotatingRight;
+
+		if (Input.GetKey ("s") && !isRotating) {
 			transform.Translate (0, -moveSpeed * Time.deltaTime, 0);
 			moving = true;
 		}
-		if (Input.GetKey ("w")) {
+		if (Input.GetKey ("w") && !isRotating) {
 			transform.Translate (0, moveSpeed * Time.deltaTime, 0);
 			moving = true;
 		}
@@ -79,10 +73,10 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKey ("j")) {
+		if (Input.GetKey ("a")) {
 			isRotatingLeft = !isRotatingRight;
 		}
-		if (Input.GetKey ("l")) {
+		if (Input.GetKey ("d")) {
 			isRotatingRight = !isRotatingLeft;
 		}
 
