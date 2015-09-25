@@ -37,6 +37,11 @@ public class Player : MonoBehaviour {
 		currentFrame = idleFrame;
 		sr.sprite = playerSprite [Mathf.RoundToInt(currentFrame)];
 
+		LineRenderer lr = gameObject.GetComponent<LineRenderer> ();
+		lr.SetWidth (0.01f, 0.01f);
+		lr.SetColors (Color.yellow, Color.yellow);
+		lr.material = new Material(Shader.Find("Particles/Additive"));
+
 		transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
 	}
 	
