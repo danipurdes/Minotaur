@@ -65,24 +65,37 @@ public class Maze : MonoBehaviour {
 			}
 		}
 
-		int rad = 5;
+		int rad = 8;
 		Vector2 playerPos = transform.GetChild (0).position;
-		for (int i = Math.Max(Mathf.RoundToInt(playerPos.x) - rad, 0); i < Math.Min(Mathf.RoundToInt(playerPos.x) + rad, MAZE_SIZE); i++) {
-			for (int j = Math.Max(Mathf.RoundToInt(playerPos.y) - rad, 0); j < Math.Min(Mathf.RoundToInt(playerPos.y) + rad, MAZE_SIZE); j++) {
+		for (int i = 0; i < MAZE_SIZE; i++) {
+			for (int j = 0; j < MAZE_SIZE; j++) {
 				float dis = Vector2.Distance(playerPos, new Vector2(i + .5f,j + .5f));
 				if(dis <= rad) {
-					float colorval = (rad - dis)/(float)rad;
+					float colorval = Mathf.Sqrt(rad - dis)/(float)rad;
 					SpriteRenderer sr = tiles[j,i].go.GetComponent<SpriteRenderer>();
-					sr.color = new Color(colorval, colorval, colorval);
+					//if (rad > dis*2)
+						sr.color = new Color(colorval, colorval, colorval);
+					//else
+						//sr.color = new Color(Mathf.Pow (colorval,2), Mathf.Pow (colorval,2), Mathf.Pow (colorval,2));
 				}
 			}
 		}
+//		for (int i = Math.Max(Mathf.RoundToInt(playerPos.x) - rad, 0); i < Math.Min(Mathf.RoundToInt(playerPos.x) + rad, MAZE_SIZE); i++) {
+//			for (int j = Math.Max(Mathf.RoundToInt(playerPos.y) - rad, 0); j < Math.Min(Mathf.RoundToInt(playerPos.y) + rad, MAZE_SIZE); j++) {
+//				float dis = Vector2.Distance(playerPos, new Vector2(i + .5f,j + .5f));
+//				//if(dis <= rad) {
+//					float colorval = (1/Mathf.Pow(rad - dis,1.0f/3))/(float)rad;
+//					SpriteRenderer sr = tiles[j,i].go.GetComponent<SpriteRenderer>();
+//					sr.color = new Color(colorval, colorval, colorval);
+//				//}
+//			}
+//		}
 	}
 
 	Coordinate carveMaze () {
 		int startX = MAZE_SIZE / 2;
 		int startY = startX;
-		MazeCarver[] carvers = new MazeCarver[60];
+		MazeCarver[] carvers = new MazeCarver[100];
 		carvers [0] = new MazeCarver (startX, startY, this);
 		int nextIndex = 1;
 		int activeIndex = 0;
