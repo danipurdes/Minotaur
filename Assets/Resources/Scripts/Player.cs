@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
@@ -12,12 +13,16 @@ public class Player : MonoBehaviour {
 	float currentFrame;
 	bool isRotatingLeft;
 	bool isRotatingRight;
+	List<Vector3> yarn;
 
 	// Use this for initialization
 	void Start () {
+		yarn = new List<Vector3> ();
+
 		gameObject.AddComponent<CircleCollider2D> ();
 		gameObject.AddComponent<Rigidbody2D> ();
 		gameObject.AddComponent<SpriteRenderer> ();
+		gameObject.AddComponent<LineRenderer> ();
 
 		CircleCollider2D cc = gameObject.GetComponent<CircleCollider2D> ();
 		cc.radius = .25f;
@@ -32,11 +37,18 @@ public class Player : MonoBehaviour {
 		currentFrame = idleFrame;
 		sr.sprite = playerSprite [Mathf.RoundToInt(currentFrame)];
 
+		LineRenderer lr = gameObject.GetComponent<LineRenderer> ();
+		lr.SetWidth (0.01f, 0.01f);
+		lr.SetColors (Color.yellow, Color.yellow);
+		lr.material = new Material(Shader.Find("Particles/Additive"));
+
 		transform.position = new Vector3 (transform.position.x, transform.position.y, -1);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		yarn.Add(gameObject.transform.position); 
 
 		GameObject door = GameObject.Find("Door");
 		if (Mathf.RoundToInt(door.transform.position.x) == Mathf.RoundToInt(gameObject.transform.position.x) && 
@@ -46,19 +58,13 @@ public class Player : MonoBehaviour {
 
 		bool moving = false;
 
-		if (Input.GetKey ("a")) {
-			transform.Translate (-moveSpeed * Time.deltaTime, 0, 0);
-			moving = true;
-		}
-		if (Input.GetKey ("d")) {
-			transform.Translate (moveSpeed * Time.deltaTime, 0, 0);
-			moving = true;
-		}
-		if (Input.GetKey ("s")) {
+		bool isRotating = isRotatingLeft || isRotatingRight;
+
+		if (Input.GetKey ("s") && !isRotating) {
 			transform.Translate (0, -moveSpeed * Time.deltaTime, 0);
 			moving = true;
 		}
-		if (Input.GetKey ("w")) {
+		if (Input.GetKey ("w") && !isRotating) {
 			transform.Translate (0, moveSpeed * Time.deltaTime, 0);
 			moving = true;
 		}
@@ -79,10 +85,10 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKey ("j")) {
+		if (Input.GetKey ("a")) {
 			isRotatingLeft = !isRotatingRight;
 		}
-		if (Input.GetKey ("l")) {
+		if (Input.GetKey ("d")) {
 			isRotatingRight = !isRotatingLeft;
 		}
 
@@ -92,6 +98,12 @@ public class Player : MonoBehaviour {
 		} else {
 			sr.sprite = playerSprite[walkCycle[idleFrame]];
 			currentFrame = idleFrame;
+		}
+
+		LineRenderer lr = gameObject.GetComponent<LineRenderer> ();
+		lr.SetVertexCount (yarn.Count);
+		for (int i = 0; i < yarn.Count; ++i) {
+			lr.SetPosition(i, yarn[i]);
 		}
 	}
 }
